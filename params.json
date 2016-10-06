@@ -1,6 +1,0 @@
-{
-  "name": "Laughing:)的博客",
-  "tagline": "sharing laughing coding",
-  "body": "### JavaScript Dom编程——（一）初识DOM\r\n本篇博客是**《JavaScript Dom编程》系列**博文的开篇之作。该系列博文实则是关于《_JavaScript DOM编程艺术(第2版)_》这本书的学习总结，该书并非一本语言工具书，需要读者有些许JS语法基础，不会拘泥于语法细节。或许你对其中的一部分早已熟悉，但真正的目的是让读者**理解DOM脚本编程技术背后的思路和原则**。平稳退化、渐进增强、以用户为中心的设计对任何Web开发工作都非常重要。第一篇**初识DOM**，介绍了对于DOM的基本认识，DOM和javaScript之间的关系，以及一些DOM中的基础API。\b查看原文请点击[JavaScript Dom编程——（一）初识DOM](http://mickey-wang.github.io/JavaScript-DOM/JavaScript-DOM-1.html)",
-  "note": "Don't delete this file! It's used internally to help with page regeneration."
-}
