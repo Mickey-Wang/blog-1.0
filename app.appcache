@@ -1,0 +1,32 @@
+CACHE MANIFEST
+# 2016-10-17:v3007
+img/backgrounds/coding-curriculum.jpg
+img/backgrounds/coffee.jpg
+img/backgrounds/mac.jpg
+img/social-icons/dribbble.png
+img/social-icons/facebook.png
+img/social-icons/flickr.png
+img/social-icons/googleplus.png
+img/social-icons/pinterest.png
+img/social-icons/twitter.png
+img/brand.ico
+img/brand.png
+img/pattern.jpg
+img/pattern-2.png
+img/pattern-3.png
+img/pattern-7.png
+img/qqQR.jpg
+img/weixinQR.jpg
+
+http://fonts.googleapis.com/css?family=Baloo+Bhai
+
+https://cdn.bootcss.com/jquery/1.11.3/jquery.min.js
+https://cdn.bootcss.com/jquery-smooth-scroll/1.7.2/jquery.smooth-scroll.min.js
+
+# Use from network if available
+NETWORK:
+*
+ 
+# Fallback content
+FALLBACK:
+/ 404.html

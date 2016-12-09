@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<!--<html lang="en" manifest="app.appcache">-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laughing's Blog</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <!-- 个人定制flat-ui.css-->
+    <link rel="stylesheet" href="css/flat-ui.min.css"/>
+    <link rel="stylesheet" href="css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="css/Ghost.css"/>
+    <!-- cdn有问题，多次请求-->
+    <!--https://cdn.fontawesome.com/embed-codes user:readmeok@126.com password:5085825-->
+    <!--<script src="https://use.fontawesome.com/00cf2c3736.js"></script>-->
+    <link rel="stylesheet" href="css/countdownPage.css"/>
+
+
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Baloo+Bhai">
+
+    <!--<link rel="stylesheet" href="css/bootstrap-switch.min.css">-->
+
+    <!-- Favicon and touch icons -->
+    <link rel="shortcut icon" href="img/brand.ico">
+    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">-->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">-->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">-->
+    <!--<link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">-->
+
+</head>
+<script>
+    var appCache = window.applicationCache;
+    /*
+     应用在离线后将保持缓存状态，除非发生以下某种情况：
+
+     1、用户清除了浏览器对您网站的数据存储。
+     2、清单文件经过修改。请注意：更新清单中列出的某个文件并不意味着浏览器会重新缓存该资源。清单文件本身必须进行更改。
+     --------------------------前两种都需要用户主动刷新页面触发-------------------------------
+     3、应用缓存通过编程方式进行更新。
+     var appCache = window.applicationCache;
+
+     appCache.update(); // Attempt to update the user's cache.
+
+     ...
+
+     if (appCache.status == window.applicationCache.UPDATEREADY) {
+     appCache.swapCache();  // The fetch was successful, swap in the new cache.
+     }
+     */
+
+    // applicationCache事件监听处理
+    appCache.addEventListener('checking', checkingEvent, false);
+    appCache.addEventListener('downloading', downloadingEvent, false);
+
+    appCache.addEventListener('noupdate', noUpdateEvent, false);
+    appCache.addEventListener('cached', cachedEvent, false);
+
+    appCache.addEventListener('updateready', updateReady, false);
+    appCache.addEventListener('progress', progressEvent, false);//注册的这个progress事件是等待所有真正progress发生滞后触发，所以没有起到设计进度条应该解决的问题？？？？
+
+    appCache.addEventListener('obsolete', obsoleteEvent, false);
+    appCache.addEventListener('error', appCacheError, false);
+
+    function checkingEvent(event) {
+        console.log('checkingEvent:Checking for an update. Always the first event fired in the sequence.');
+    }
+
+    function downloadingEvent(event) {
+        console.log('downloadingEvent:An update was found. The browser is fetching resources.');
+    }
+
+    function noUpdateEvent(event) {
+        console.log('noUpdateEvent:Fired after the first download of the manifest.');
+    }
+
+    function cachedEvent(event) {
+        console.log('cachedEvent:Fired after the first cache of the manifest.');
+//        window.location.reload();
+    }
+
+    function updateReady(event) {
+        console.log('updateReady:Fired when the manifest resources have been newly redownloaded.');
+        if (appCache.status == appCache.UPDATEREADY) {
+            // Browser downloaded a new app cache.
+            // Swap（交换） it in and reload the page to get the new hotness.
+            appCache.swapCache();
+            window.location.reload();
+        } else {
+            // Manifest didn't changed. Nothing new to server.
+        }
+    }
+
+    // 显示资源文件加载进度
+    function progressEvent(event) {
+        console.log('progressEvent:Fired for each resource listed in the manifest as it is being fetched.');
+        var total = event.total;
+        var loaded = event.loaded;
+        var per = parseInt((loaded / total) * 100);
+        loadingPage(per);
+    }
+
+    function obsoleteEvent(event) {
+        console.log('obsoleteEvent:Fired if the manifest file returns a 404 or 410.This results in the application cache being deleted.');
+    }
+
+    function appCacheError(event) {
+        console.log('errorEvent:The manifest returns 404 or 410, the download failed,or the manifest changed while the download was in progress.');
+    }
+
+    function loadingPage(percent) {
+        //准备进度条元素
+        if(!document.getElementsByClassName("processBarEle")[0]){
+            var divElement = document.createElement("div");
+            divElement.setAttribute("class","container processBarEle");
+            divElement.setAttribute("style","text-align: center;position: absolute;z-index: 1001;");
+        }else{
+            var divElement = document.getElementsByClassName("processBarEle")[0];
+        }
+        var processBar = '<div class="row"><i class="fa fa-spinner fa-pulse fa-3x fa-fw fa-inverse"></i><span class="sr-only">Loading...</span></div><div class="row" style="margin-top: 30px;"><div class="progress" style="width: 50%;margin-left: 25%;"><div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="' + percent + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + percent + '%;">' + percent + '%</div></div></div>';
+        divElement.innerHTML = processBar;
+        document.getElementsByTagName("body")[0].insertBefore(divElement,document.getElementsByClassName("myheading")[0]);
+
+        var leftVal = ( window.innerWidth - divElement.offsetWidth ) / 2;
+        var topVal = ( window.innerHeight - divElement.offsetHeight ) / 2;
+        divElement.style.left = leftVal + "px";
+        divElement.style.top = topVal + "px";
+
+        //准备蒙版元素
+        var maskElement = document.getElementsByClassName("mask")[0];
+        maskElement.style.width = document.getElementsByTagName("body")[0].offsetWidth + "px";
+        maskElement.style.height = document.getElementsByTagName("body")[0].offsetHeight + "px";
+
+        if(percent==100) {
+            document.getElementsByTagName("body")[0].removeChild(divElement);
+            document.getElementsByTagName("body")[0].removeChild(maskElement);
+
+        }
+    }
+
+</script>
+<body class="home-template">
+<div class="myheading">
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                </button>
+                <a class="navbar-brand" href="#">
+                    <img src="img/brand.png" alt="bootstrap" width="25px"/>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">selected</a></li>
+                    <li><a href="#">tips</a></li>
+                    <li><a href="#">tools</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"
+                           aria-haspopup="true">series<span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">episode</a></li>
+                            <li><a href="#">episode</a></li>
+                            <li><a href="#">episode</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">episode</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="navbar-form navbar-right" action="#" role="search">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input class="form-control" id="navbarInput-01" type="search" placeholder="请输入标签检索">
+                            <span class="input-group-btn">
+                              <button type="submit" class="btn"><span class="fui-search"></span></button>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+                <button class="btn btn-default navbar-btn btn-xs visible-xs-block goTop pull-right" type="button">回到顶部
+                </button>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<header class="main-header">
+    <!-- Coming Soon -->
+    <div class="coming-soon">
+        <div class="inner-bg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2>Laughing's Blog</h2>
+
+                        <p class="visible-sm-block visible-md-block visible-lg-block">一个商科范儿的coder &nbsp; 一页具有独立人格的博客
+                            &nbsp; 一种与众不同的生活方式</p>
+
+                        <p class="visible-xs-block">一个商科范儿的coder</p>
+
+                        <p class="visible-xs-block">一页赋予独立人格的博客</p>
+
+                        <p class="visible-xs-block">一种与众不同的生活方式</p>
+
+                        <div class="timer">
+                            <div class="days-wrapper">
+                                <span class="years"></span> <br>years
+                            </div>
+                            <div class="hours-wrapper">
+                                <span class="months"></span> <br>months
+                            </div>
+                            <div class="minutes-wrapper">
+                                <span class="days"></span> <br>days
+                            </div>
+                            <div class="seconds-wrapper">
+                                <span class="hours"></span> <br>hours
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-badge hidden-xs hidden-sm" title="Desktop and Mobile Ready">
+        <i class="fa fa-desktop"></i>
+        <i class="fa fa-laptop"></i>
+        <i class="fa fa-tablet"></i>
+        <i class="fa fa-mobile"></i>
+    </div>
+    <div class="timerTemp" style="display: none;"></div>
+</header>
+
+<section class="content-wrap">
+    <div class="container">
+        <div class="row">
+
+            <aside class="col-md-4 sidebar">
+                <div class="widget">
+                    <h4 class="title" title="Laughing的公告板" data-toggle="tooltip">Notes</h4>
+
+                    <div class="content community">
+                        <ul class="fa-ul">
+                            <li><i class="fa-li fa fa-check-square"></i>本站当前版本暂无留言功能，如需交流回复，请点击<a href="#"
+                                                                                                  id="goFooter">网页底部</a>任一社区网络关注。新浪微博中会有对应每篇文章的微博，可在对应微博下留言，欢迎评点指正
+                                <i class="fa fa-smile-o" aria-hidden="true"></i></li>
+                            <li><i class="fa-li fa fa-check-square"></i>想要进一步了解本站，请阅读<a href="#">我的博客之路</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="widget">
+                    <h4 class="title" title="通过点按来删除标签，或者在下方空白处输入新标签，以完成快速检索" data-toggle="tooltip">Tag Cloud</h4>
+
+                    <input name="tagsinput-01" class="tagsinput"
+                           value="java, JavaScript, Grunt, Git, eclipse, DOM, mySQL, 清空所有标签"/>
+                </div>
+                <div class="widget visible-md-block visible-lg-block musicWidget">
+                    <h4 class="title" title="点按开关后，可在屏幕左下角显示或隐藏音乐组件" data-toggle="tooltip">Music</h4>
+
+                    <div class="musicPlugin">
+                        <span>生活不止眼前的苟且</span>&nbsp;
+                        <input type="checkbox" data-toggle="switch" id="musicSwitch1"/>
+                    </div>
+                    <div class="musicPlugin">
+                        <span>故乡</span>&nbsp;
+                        <input type="checkbox" data-toggle="switch" id="musicSwitch2"/>
+                    </div>
+                    <div class="musicPlugin">
+                        <span>平凡之路</span>&nbsp;
+                        <input type="checkbox" data-toggle="switch" id="musicSwitch3"/>
+                    </div>
+                </div>
+            </aside>
+
+
+            <main class="col-md-8 main-content">
+                <article class="post tag-about-ghost tag-ghost-in-depth tag-zhu-shou-han-shu">
+                    <div class="post-head">
+                        <h4 class="post-title">
+                            <a href="#">JavaScript Dom编程——（一）初识<abbr title="Document Object Model">DOM</abbr></a>
+                        </h4>
+
+                        <div class="post-meta">
+                            <span class="author">
+                                Laughing
+                            </span>
+                            &nbsp;•&nbsp;
+                            <time class="date" datetime="2016-10-03">2016年10月03日</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>本篇博客是<strong>《JavaScript Dom编程》系列</strong>博文的开篇之作。该系列博文实则是关于《JavaScript
+                            DOM编程艺术(第2版)》这本书的学习总结，该书真正的目的是让读者<strong>理解DOM脚本编程技术背后的思路和原则</strong>。平稳退化、渐进增强、以用户为中心的设计对任何Web开发工作都非常重要。第一篇初识DOM，介绍了对于DOM的基本认识，DOM和javaScript之间的关系，以及一些DOM中的基础API。
+                        </p>
+                    </div>
+                    <hr>
+                    <div class="footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-tags" aria-hidden="true"></i>&nbsp;
+                            <a href="#">java</a>&nbsp;
+                            <a href="#">Dom</a>&nbsp;
+                            <a href="#">Grunt</a>&nbsp;
+                        </div>
+                        <div class="pull-right">
+                            <a href="http://mickey-wang.github.io/JavaScript-DOM/JavaScript-DOM-1.html"
+                               class="btn btn-primary" target="_blank">阅读全文</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="post tag-about-ghost tag-ghost-in-depth tag-zhu-shou-han-shu">
+                    <div class="post-head">
+                        <h4 class="post-title">
+                            <a href="#">JavaScript Dom编程——（一）初识<abbr title="Document Object Model">DOM</abbr></a>
+                        </h4>
+
+                        <div class="post-meta">
+                            <span class="author">
+                                Laughing
+                            </span>
+                            &nbsp;•&nbsp;
+                            <time class="date" datetime="2016-10-03">2016年10月03日</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>本篇博客是<strong>《JavaScript Dom编程》系列</strong>博文的开篇之作。该系列博文实则是关于《JavaScript
+                            DOM编程艺术(第2版)》这本书的学习总结，该书真正的目的是让读者<strong>理解DOM脚本编程技术背后的思路和原则</strong>。平稳退化、渐进增强、以用户为中心的设计对任何Web开发工作都非常重要。第一篇初识DOM，介绍了对于DOM的基本认识，DOM和javaScript之间的关系，以及一些DOM中的基础API。
+                        </p>
+                    </div>
+                    <hr>
+                    <div class="footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-tags" aria-hidden="true"></i>&nbsp;
+                            <a href="#">java</a>&nbsp;
+                            <a href="#">Dom</a>&nbsp;
+                            <a href="#">Grunt</a>&nbsp;
+                        </div>
+                        <div class="pull-right">
+                            <a href="http://mickey-wang.github.io/JavaScript-DOM/JavaScript-DOM-1.html"
+                               class="btn btn-primary" target="_blank">阅读全文</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="post tag-about-ghost tag-ghost-in-depth tag-zhu-shou-han-shu">
+                    <div class="post-head">
+                        <h4 class="post-title">
+                            <a href="#">JavaScript Dom编程——（一）初识<abbr title="Document Object Model">DOM</abbr></a>
+                        </h4>
+
+                        <div class="post-meta">
+                            <span class="author">
+                                Laughing
+                            </span>
+                            &nbsp;•&nbsp;
+                            <time class="date" datetime="2016-10-03">2016年10月03日</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>本篇博客是<strong>《JavaScript Dom编程》系列</strong>博文的开篇之作。该系列博文实则是关于《JavaScript
+                            DOM编程艺术(第2版)》这本书的学习总结，该书真正的目的是让读者<strong>理解DOM脚本编程技术背后的思路和原则</strong>。平稳退化、渐进增强、以用户为中心的设计对任何Web开发工作都非常重要。第一篇初识DOM，介绍了对于DOM的基本认识，DOM和javaScript之间的关系，以及一些DOM中的基础API。
+                        </p>
+                    </div>
+                    <hr>
+                    <div class="footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-tags" aria-hidden="true"></i>&nbsp;
+                            <a href="#">java</a>&nbsp;
+                            <a href="#">Dom</a>&nbsp;
+                            <a href="#">Grunt</a>&nbsp;
+                        </div>
+                        <div class="pull-right">
+                            <a href="http://mickey-wang.github.io/JavaScript-DOM/JavaScript-DOM-1.html"
+                               class="btn btn-primary" target="_blank">阅读全文</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="post tag-about-ghost tag-ghost-in-depth tag-zhu-shou-han-shu">
+                    <div class="post-head">
+                        <h4 class="post-title">
+                            <a href="#">JavaScript Dom编程——（一）初识<abbr title="Document Object Model">DOM</abbr></a>
+                        </h4>
+
+                        <div class="post-meta">
+                            <span class="author">
+                                Laughing
+                            </span>
+                            &nbsp;•&nbsp;
+                            <time class="date" datetime="2016-10-03">2016年10月03日</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>本篇博客是<strong>《JavaScript Dom编程》系列</strong>博文的开篇之作。该系列博文实则是关于《JavaScript
+                            DOM编程艺术(第2版)》这本书的学习总结，该书真正的目的是让读者<strong>理解DOM脚本编程技术背后的思路和原则</strong>。平稳退化、渐进增强、以用户为中心的设计对任何Web开发工作都非常重要。第一篇初识DOM，介绍了对于DOM的基本认识，DOM和javaScript之间的关系，以及一些DOM中的基础API。
+                        </p>
+                    </div>
+                    <hr>
+                    <div class="footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-tags" aria-hidden="true"></i>&nbsp;
+                            <a href="#">java</a>&nbsp;
+                            <a href="#">Dom</a>&nbsp;
+                            <a href="#">Grunt</a>&nbsp;
+                        </div>
+                        <div class="pull-right">
+                            <a href="http://mickey-wang.github.io/JavaScript-DOM/JavaScript-DOM-1.html"
+                               class="btn btn-primary" target="_blank">阅读全文</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="post tag-about-ghost tag-ghost-in-depth tag-zhu-shou-han-shu">
+                    <div class="post-head">
+                        <h4 class="post-title">
+                            <a href="#">JavaScript Dom编程——（一）初识<abbr title="Document Object Model">DOM</abbr></a>
+                        </h4>
+
+                        <div class="post-meta">
+                            <span class="author">
+                                Laughing
+                            </span>
+                            &nbsp;•&nbsp;
+                            <time class="date" datetime="2016-10-03">2016年10月03日</time>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>本篇博客是<strong>《JavaScript Dom编程》系列</strong>博文的开篇之作。该系列博文实则是关于《JavaScript
+                            DOM编程艺术(第2版)》这本书的学习总结，该书真正的目的是让读者<strong>理解DOM脚本编程技术背后的思路和原则</strong>。平稳退化、渐进增强、以用户为中心的设计对任何Web开发工作都非常重要。第一篇初识DOM，介绍了对于DOM的基本认识，DOM和javaScript之间的关系，以及一些DOM中的基础API。
+                        </p>
+                    </div>
+                    <hr>
+                    <div class="footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-tags" aria-hidden="true"></i>&nbsp;
+                            <a href="#">java</a>&nbsp;
+                            <a href="#">Dom</a>&nbsp;
+                            <a href="#">Grunt</a>&nbsp;
+                        </div>
+                        <div class="pull-right">
+                            <a href="http://mickey-wang.github.io/JavaScript-DOM/JavaScript-DOM-1.html"
+                               class="btn btn-primary" target="_blank">阅读全文</a>
+                        </div>
+                    </div>
+                </article>
+            </main>
+
+
+        </div>
+
+        <!-- 修改了flat-ui.min.css的pagination的background，如果换其他分页模板会显示不正常 -->
+        <!--<div class="row hidden-xs hidden-sm">
+            <div class="col-md-8 col-md-offset-2" style="text-align: center">
+                <ul class="pagination">
+                    <li class="previous"><a href="#fakelink" class="fui-arrow-left"></a></li>
+                    <li class="active"><a href="#fakelink">1</a></li>
+                    <li><a href="#fakelink">2</a></li>
+                    <li><a href="#fakelink">3</a></li>
+                    <li><a href="#fakelink">4</a></li>
+                    <li><a href="#fakelink">5</a></li>
+                    <li><a href="#fakelink">6</a></li>
+                    <li><a href="#fakelink">7</a></li>
+                    <li><a href="#fakelink">8</a></li>
+                    <li><a href="#fakelink">9</a></li>
+                    <li><a href="#fakelink">10</a></li>
+                    <li class="pagination-dropdown dropup">
+                        <a href="#fakelink" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fui-triangle-up"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#fakelink">10–20</a></li>
+                            <li><a href="#fakelink">20–30</a></li>
+                            <li><a href="#fakelink">40–50</a></li>
+                        </ul>
+                    </li>
+                    <li class="next"><a href="#fakelink" class="fui-arrow-right"></a></li>
+                </ul>
+            </div>
+
+        </div>-->
+    </div>
+</section>
+
+<!--音乐插件-->
+<embed id="xiaMiBoBo_SHBZYQDGQ" class="xiaMiBoBo" src="http://www.xiami.com/widget/0_1775751240/singlePlayer.swf"
+       type="application/x-shockwave-flash" width="257"
+       height="33" wmode="transparent"></embed>
+<iframe id="netEasy_GX" class="netEasy" frameborder="no" border="0" marginwidth="0" marginheight="0" width=298 height=52
+        src="http://music.163.com/outchain/player?type=2&id=168053&auto=0&height=32"></iframe>
+<iframe id="netEasy_PFZL" class="netEasy" frameborder="no" border="0" marginwidth="0" marginheight="0" width=298
+        height=52
+        src="http://music.163.com/outchain/player?type=2&id=29750099&auto=0&height=32"></iframe>
+
+<!-- 回到顶部 -->
+<button class="btn btn-default goTop hidden-xs" title="回到顶部" data-toggle="tooltip">
+    <i class="fa fa-angle-double-up fa-2x" aria-hidden="true"></i>
+</button>
+
+<!-- 二维码 -->
+<div class="modal fade" id="weixinQRCode" tabindex="-1" role="dialog" aria-labelledby="weixinQRCodeTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <p class="modal-title" id="weixinQRCodeTitle">请用微信扫描二维码</p>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <img style="width: 50%;" src='img/weixinQR.jpg' alt='Laughing的微信二维码'/>
+            </div>
+            <div class="modal-footer" style="text-align: center;">
+                <button type="button" class="btn btn-primary btn-wide" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="qqQRCode" tabindex="-1" role="dialog" aria-labelledby="qqQRCodeTitle" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <p class="modal-title" id="qqQRCodeTitle">请用QQ扫描二维码</p>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <img style="width: 50%;" src='img/qqQR.jpg' alt='Laughing的QQ二维码'/>
+            </div>
+            <div class="modal-footer" style="text-align: center;">
+                <button type="button" class="btn btn-primary btn-wide" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="main-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <span id="facebookLogo" class="fa-stack fa-3x">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                </span>
+               <span id="twitterLogo" class="fa-stack fa-3x">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                </span>
+                <span id="weixinLogo" class="fa-stack fa-3x">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-weixin fa-stack-1x fa-inverse"></i>
+                </span>
+                <span id="qqLogo" class="fa-stack fa-3x">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-qq fa-stack-1x fa-inverse"></i>
+                </span>
+                <span id="weiboLogo" class="fa-stack fa-3x">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                </span>
+                <span id="githubLogo" class="fa-stack fa-3x">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+            </div>
+        </div>
+        <p style="margin: 70px 0 3px;">Laughing's Blog</p>
+
+        <p style="margin-bottom: 3px;">Powered by Mickey Wang</p>
+
+        <p style="margin-bottom: 3px;">Design and Development in Beijing, China</p>
+
+        <p style="margin-bottom: 3px;">Since October 2016</p>
+
+        <p style="margin-bottom: 3px;">Version v1.0.0</p>
+    </div>
+</footer>
+
+<div class="mask" style="position: absolute;left: 0;top: 0; background: #000;opacity: 0.6;z-index: 1000;">
+    
+</div>
+
+<script src="https://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<!--flat的js与bootstrap冲突-->
+<script src="js/flat-ui.min.js"></script>
+<script src="js/flatUI_application.js"></script>
+<!--<script src="js/bootstrap.min.js"></script>-->
+<script src="js/jquery.backstretch.min.js"></script>
+<script type="text/javascript" src="js/jquery.plugin.min.js"></script>
+<script type="text/javascript" src="js/jquery.countdown.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery-smooth-scroll/1.7.2/jquery.smooth-scroll.min.js"></script>
+<!--<script src="js/bootstrap-switch.min.js"></script>-->
+
+
+<script>
+    /*
+     Background slideshow
+     */
+    $('.coming-soon').backstretch([
+        "img/backgrounds/coffee.jpg"
+        , "img/backgrounds/mac.jpg"
+        , "img/backgrounds/coding-curriculum.jpg"
+    ], {duration: 3000, fade: 750});
+
+    /*
+     Countdown initializer
+     */
+    studyJavaDate = new Date(2015, 3 - 1, 5);
+    $(".timerTemp").countdown({since: studyJavaDate, onTick: countUp, format: "YODH"});
+    function countUp(periods) {
+        //[0] is years, [1] is months, [2] is weeks, [3] is days, [4] is hours, [5] is minutes, and [6] is seconds.
+        var timer = $(".timer");
+        timer.find(".years").html(periods[0]);
+        timer.find(".months").html(periods[1]);
+        timer.find(".days").html(periods[3]);
+        timer.find(".hours").html(periods[4]);
+    }
+
+    /*flatUI*/
+    var states = new Bloodhound({
+        datumTokenizer: function (d) {
+            return Bloodhound.tokenizers.whitespace(d.word);
+        },
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        limit: 4,
+        local: [
+            {word: "Alabama"},
+            {word: "Alaska"},
+            {word: "Arizona"},
+            {word: "Arkansas"},
+            {word: "California"},
+            {word: "Colorado"}
+        ]
+    });
+
+    states.initialize();
+
+    $('input.tagsinput').tagsinput();
+
+
+    /*滚动出现导航栏和回到顶部按钮*/
+    $(window).scroll(function () {
+        if ($(document).scrollTop() > $(".main-header").height() - 50) {
+            var top = window.innerHeight * 0.8;
+            $(".myheading").css("opacity", "1");
+            $("button.goTop").css("opacity", "1");
+            $("button.goTop").css("top", top);
+        } else {
+            $(".myheading").css("opacity", "0");
+            $("button.goTop").css("opacity", "0");
+        }
+    });
+
+    /*音乐开关*/
+    $('#musicSwitch1').bootstrapSwitch();
+    $('#musicSwitch2').bootstrapSwitch();
+    $('#musicSwitch3').bootstrapSwitch();
+
+    $('#musicSwitch1').on('switchChange.bootstrapSwitch', function (event, state) {
+        if (state) {
+            $('#musicSwitch2').bootstrapSwitch("state", false);
+            $('#musicSwitch3').bootstrapSwitch("state", false);
+            var top = window.innerHeight - 33;
+            $("#xiaMiBoBo_SHBZYQDGQ").css("top", top);
+            $("#xiaMiBoBo_SHBZYQDGQ").css({"left": "-30px", "opacity": "1"});
+        } else {
+            $("#xiaMiBoBo_SHBZYQDGQ").css({"left": "-257px", "opacity": "0"});
+        }
+    });
+    $('#musicSwitch2').on('switchChange.bootstrapSwitch', function (event, state) {
+        if (state) {
+            $('#musicSwitch1').bootstrapSwitch("state", false);
+            $('#musicSwitch3').bootstrapSwitch("state", false);
+            var top = window.innerHeight - 44;
+            $("#netEasy_GX").css("top", top);
+            $("#netEasy_GX").css({"left": "-40px", "opacity": "1"});
+        } else {
+            $("#netEasy_GX").css({"left": "-257px", "opacity": "0"});
+        }
+    });
+    $('#musicSwitch3').on('switchChange.bootstrapSwitch', function (event, state) {
+        if (state) {
+            $('#musicSwitch1').bootstrapSwitch("state", false);
+            $('#musicSwitch2').bootstrapSwitch("state", false);
+            var top = window.innerHeight - 44;
+            $("#netEasy_PFZL").css("top", top);
+            $("#netEasy_PFZL").css({"left": "-40px", "opacity": "1"});
+        } else {
+            $("#netEasy_PFZL").css({"left": "-257px", "opacity": "0"});
+        }
+    });
+
+    //为了修复音乐开关覆盖导航栏的暂定方案
+    $(window).scroll(function () {
+        //header加上notes和tag Cloud的高度，再加三个间隙的高度
+        var breakPoint = $(".main-header").height() + $(".widget")[0].offsetHeight + $(".widget")[1].offsetHeight + 35*3;
+        if ($(document).scrollTop() > breakPoint) {
+            $(".musicWidget").css("opacity", "0");
+        } else {
+            $(".musicWidget").css("opacity", "1");
+        }
+    });
+
+    //goTop
+    $('button.goTop').on('click', function () {
+        $.smoothScroll({
+            scrollTarget: '.main-header'
+        });
+        //去掉手机回到顶部时，菜单展开的问题
+        $("#bs-example-navbar-collapse-1").removeClass("in");
+        return false;
+    });
+
+    //goFooter
+    $('#goFooter').on('click', function () {
+        $.smoothScroll({
+            scrollTarget: '.main-footer'
+        });
+        return false;
+    });
+
+    $("#facebookLogo").on("click", function () {
+        window.open("https://www.facebook.com/mickey.wang.10690");
+    });
+    $("#twitterLogo").on("click", function () {
+        window.open("https://twitter.com/Laughing____");
+    });
+    $("#weixinLogo").on("click", function () {
+        $('#weixinQRCode').modal('show');
+    });
+    $("#qqLogo").on("click", function () {
+        $('#qqQRCode').modal('show');
+    });
+    $("#weiboLogo").on("click", function () {
+        window.open("https://weibo.com/MickeyLaughing");
+    });
+    $("#githubLogo").on("click", function () {
+        window.open("https://github.com/Mickey-Wang");
+    });
+
+</script>
+</body>
+</html>

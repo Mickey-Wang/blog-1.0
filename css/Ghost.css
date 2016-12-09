@@ -1,0 +1,273 @@
+html, body {
+    color: #505050;
+    line-height: 1.75em;
+    background: #ebebeb;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.main-header {
+    text-align: center;
+    /*padding: 42px 0;*/
+    background: #ffffff;
+    position: relative;
+}
+
+.main-header .branding {
+    font-size: 3.5em;
+    color: #303030;
+}
+
+.main-header .mobile-badge {
+    padding: 10px 10px 0px 10px;
+    bottom: 10px;
+    right: 20px;
+    font-size: 30px;
+    text-align: left;
+    border-top: 2px solid #777;
+    position: absolute;
+    z-index: 2;
+    color: #777;
+    text-decoration: none;
+    width: 140px;
+    height: 48px;
+}
+
+.myheading{
+    position: relative;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.6s;
+    -moz-transition: opacity 0.6s; /* Firefox 4 */
+    -webkit-transition: opacity 0.6s; /* Safari 和 Chrome */
+    -o-transition: opacity 0.6s; /* Opera */
+}
+
+/*a {
+    color: #e67e22;
+    outline: none;
+    text-decoration: none;
+}*/
+
+.main-header .branding img {
+    max-width: 100%;
+}
+
+/*a:active, a:focus, a img {
+    outline: none;
+}*/
+
+/*导航栏*/
+.main-navigation {
+    text-align: center;
+    background: #ffffff;
+    border-top: 1px solid #ebebeb;
+    border-bottom: 3px solid #e1e1e1;
+    margin-bottom: 35px;
+}
+
+.main-navigation .menu {
+    padding: 0;
+    margin: 0;
+}
+
+.main-navigation .menu li.nav-current {
+    border-bottom: 3px solid #e67e22;
+    margin-bottom: -2px;
+}
+
+.main-navigation .menu li {
+    list-style: none;
+    display: inline-block;
+    position: relative;
+}
+
+.main-navigation .menu li a {
+    color: #505050;
+    line-height: 4em;
+    display: block;
+    padding: 0 21px;
+}
+
+/*内容*/
+.post {
+    padding: 35px;
+    background: #ffffff;
+    margin-bottom: 35px;
+    position: relative;
+    overflow: hidden;
+}
+
+.post .post-head {
+    text-align: center;
+}
+
+.post .post-head .post-title {
+    /*margin: 0;*/
+    /*font-size: 2.5em;*/
+    /*line-height: 1em;*/
+}
+
+.post .post-head .post-title a {
+    color: #303030;
+}
+
+.post .post-head .post-meta {
+    color: #959595;
+    margin: 14px 0 14px;
+}
+
+.post-content {
+    font: 400 18px/1.62 "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #444443;
+}
+
+.post-content p {
+    text-indent: 2em;
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+/*.btn-default {
+    border: 1px solid #e67e22;
+    background: #e67e22;
+    color: #ffffff;
+    -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}*/
+
+/*.btn {
+    padding: 7px 14px;
+    border-radius: 2px;
+}*/
+
+.post .post-footer {
+    margin-top: 30px;
+    border-top: 1px solid #ebebeb;
+    padding: 21px 0 0;
+}
+
+.post .post-footer .tag-list {
+    color: #959595;
+    line-height: 28px;
+}
+
+/*右侧内容*/
+.sidebar .widget {
+    background: #ffffff;
+    padding: 21px 30px;
+}
+
+.widget {
+    margin-bottom: 35px;
+}
+
+.widget .title {
+    margin-top: 0px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid #ebebeb;
+    margin-bottom: 21px;
+    position: relative;
+}
+
+.widget .tag-cloud a {
+    border: 1px solid #ebebeb;
+    padding: 2px 7px;
+    color: #959595;
+    line-height: 1.5em;
+    display: inline-block;
+    margin: 0 7px 7px 0;
+}
+
+/*footer*/
+.main-footer {
+    background: #34495e;
+    padding: 70px 0 70px;
+    /*color: #959595;*/
+    text-align: center;
+}
+
+.widget {
+    margin-bottom: 35px;
+}
+
+.widget .title {
+    margin-top: 0px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid #ebebeb;
+    margin-bottom: 21px;
+    position: relative;
+}
+
+.widget .title:after {
+    content: '';
+    width: 90px;
+    height: 1px;
+    background: #e67e22;
+    position: relative;
+    left: 0;
+    bottom: -1px;
+}
+
+/*虾米音乐*/
+.xiaMiBoBo {
+    position: fixed;
+    left: -257px;
+    opacity: 0;
+    transition: left 1s, opacity 1s;
+    -moz-transition: left 1s, opacity 1s; /* Firefox 4 */
+    -webkit-transition: left 1s, opacity 1s; /* Safari 和 Chrome */
+    -o-transition: left 1s, opacity 1s; /* Opera */
+}
+.netEasy {
+    position: fixed;
+    left: -257px;
+    opacity: 0;
+    transition: left 1s, opacity 1s;
+    -moz-transition: left 1s, opacity 1s; /* Firefox 4 */
+    -webkit-transition: left 1s, opacity 1s; /* Safari 和 Chrome */
+    -o-transition: left 1s, opacity 1s; /* Opera */
+}
+
+.musicPlugin {
+    position: relative;
+    z-index: 1000;
+    margin-bottom: 10px;
+}
+
+.musicPlugin span{
+    vertical-align: middle;
+}
+
+.fa-li{
+    top:0.342857em;
+}
+
+button.goTop.hidden-xs{
+    position: fixed;
+    right: 20px;
+    opacity: 0;
+    transition: opacity 0.6s;
+    -moz-transition: opacity 0.6s; /* Firefox 4 */
+    -webkit-transition: opacity 0.6s; /* Safari 和 Chrome */
+    -o-transition: opacity 0.6s; /* Opera */
+}
+
+.fa-stack.fa-3x:hover{
+    color: #34495e;
+    cursor: pointer;
+    transition: color 0.4s ease;
+    -moz-transition: color 0.4s ease; /* Firefox 4 */
+    -webkit-transition: color 0.4s ease; /* Safari 和 Chrome */
+    -o-transition: color 0.4s ease; /* Opera */
+}
+
+.musicWidget{
+    opacity: 1;
+    transition: opacity 0.6s;
+    -moz-transition: opacity 0.6s; /* Firefox 4 */
+    -webkit-transition: opacity 0.6s; /* Safari 和 Chrome */
+    -o-transition: opacity 0.6s; /* Opera */
+}
