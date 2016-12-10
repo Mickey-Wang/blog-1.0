@@ -25,13 +25,13 @@
     <!--虽然官方都用的png图片做说明，但实际测试jpg格式也可用（不推荐），图片无需做圆角和高光效果，同Native App一样，系统会自动为图标添加圆角及高光。
     如果不想系统对图标添加效果，可以用apple-touch-icon-precomposed代替apple-touch-icon，这时我们提供的图标就要自己做圆角和高亮效果了。-->
     <!-- Standard iPhone -->
-    <link rel="apple-touch-icon" sizes="57x57" href="img/MW-iphone-57.png" />
+    <link rel="apple-touch-icon" sizes="57x57" href="img/MW-iphone-57.png"/>
     <!-- Retina iPhone -->
-    <link rel="apple-touch-icon" sizes="114x114" href="img/MW-iphone-114.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="img/MW-iphone-114.png"/>
     <!-- Standard iPad -->
-    <link rel="apple-touch-icon" sizes="72x72" href="img/MW-ipad-72.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="img/MW-ipad-72.png"/>
     <!-- Retina iPad -->
-    <link rel="apple-touch-icon" sizes="144x144" href="img/MW-ipad-144.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="img/MW-ipad-144.png"/>
 
 </head>
 <script>
@@ -115,16 +115,16 @@
 
     function loadingPage(percent) {
         //准备进度条元素
-        if(!document.getElementsByClassName("processBarEle")[0]){
+        if (!document.getElementsByClassName("processBarEle")[0]) {
             var divElement = document.createElement("div");
-            divElement.setAttribute("class","container processBarEle");
-            divElement.setAttribute("style","text-align: center;position: absolute;z-index: 1001;");
-        }else{
+            divElement.setAttribute("class", "container processBarEle");
+            divElement.setAttribute("style", "text-align: center;position: absolute;z-index: 1001;");
+        } else {
             var divElement = document.getElementsByClassName("processBarEle")[0];
         }
         var processBar = '<div class="row"><i class="fa fa-spinner fa-pulse fa-3x fa-fw fa-inverse"></i><span class="sr-only">Loading...</span></div><div class="row" style="margin-top: 30px;"><div class="progress" style="width: 50%;margin-left: 25%;"><div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="' + percent + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + percent + '%;">' + percent + '%</div></div></div>';
         divElement.innerHTML = processBar;
-        document.getElementsByTagName("body")[0].insertBefore(divElement,document.getElementsByClassName("myheading")[0]);
+        document.getElementsByTagName("body")[0].insertBefore(divElement, document.getElementsByClassName("myheading")[0]);
 
         var leftVal = ( window.innerWidth - divElement.offsetWidth ) / 2;
         var topVal = ( window.innerHeight - divElement.offsetHeight ) / 2;
@@ -136,7 +136,7 @@
         maskElement.style.width = document.getElementsByTagName("body")[0].offsetWidth + "px";
         maskElement.style.height = document.getElementsByTagName("body")[0].offsetHeight + "px";
 
-        if(percent==100) {
+        if (percent == 100) {
             document.getElementsByTagName("body")[0].removeChild(divElement);
             document.getElementsByTagName("body")[0].removeChild(maskElement);
 
@@ -582,7 +582,7 @@
 </footer>
 
 <div class="mask" style="position: absolute;left: 0;top: 0; background: #000;opacity: 0.6;z-index: 1000;">
-    
+
 </div>
 
 <script src="https://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
@@ -598,6 +598,11 @@
 
 
 <script>
+
+    if (window.innerWidth > 390) {
+        $('.main-footer .row div').addClass("col-xs-10 col-xs-offset-1");
+    }
+
     /*
      Background slideshow
      */
@@ -698,7 +703,7 @@
     //为了修复音乐开关覆盖导航栏的暂定方案
     $(window).scroll(function () {
         //header加上notes和tag Cloud的高度，再加三个间隙的高度
-        var breakPoint = $(".main-header").height() + $(".widget")[0].offsetHeight + $(".widget")[1].offsetHeight + 35*3;
+        var breakPoint = $(".main-header").height() + $(".widget")[0].offsetHeight + $(".widget")[1].offsetHeight + 35 * 3;
         if ($(document).scrollTop() > breakPoint) {
             $(".musicWidget").css("opacity", "0");
         } else {
