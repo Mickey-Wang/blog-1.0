@@ -122,8 +122,8 @@ a:hover { text-decoration: none; }
 .timer .hours,
 .timer .years,
 .timer .months {
-    font-size: 80px;
-    line-height: 90px;
+    font-size: 60px;
+    line-height: 70px;
 }
 
 
