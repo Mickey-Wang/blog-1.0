@@ -62,7 +62,7 @@
     appCache.addEventListener('cached', cachedEvent, false);
 
     appCache.addEventListener('updateready', updateReady, false);
-    appCache.addEventListener('progress', progressEvent, false);//注册的这个progress事件是等待所有真正progress发生滞后触发，所以没有起到设计进度条应该解决的问题？？？？
+    appCache.addEventListener('progress', progressEvent, false);//注册的这个progress事件是等待所有真正progress发生之后触发，所以没有起到设计进度条应该解决的问题？？？？
 
     appCache.addEventListener('obsolete', obsoleteEvent, false);
     appCache.addEventListener('error', appCacheError, false);
@@ -102,7 +102,7 @@
         var total = event.total;
         var loaded = event.loaded;
         var per = parseInt((loaded / total) * 100);
-        loadingPage(per);
+        //loadingPage(per);
     }
 
     function obsoleteEvent(event) {
