@@ -271,3 +271,11 @@ button.goTop.hidden-xs{
     -webkit-transition: opacity 0.6s; /* Safari 和 Chrome */
     -o-transition: opacity 0.6s; /* Opera */
 }
+
+.articleNone{
+    position: absolute;
+    left: 25%;
+    top: 120px;
+    text-align: center;
+    z-index: 0;
+}
