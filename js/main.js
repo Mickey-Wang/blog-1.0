@@ -193,10 +193,25 @@ $(document).ready(function(){
     $("#javaNav").on("click",function(){
         removeAddTags(["java"]);
     });
+    $("#jsNav").on("click",function(){
+        removeAddTags(["JavaScript"]);
+    });
+    $("#toolsNav").on("click",function(){
+        removeAddTags(["tools","tips"]);
+    });
+    $("#techNav").on("click",function(){
+        removeAddTags([""]);
+    });
+    $("#commercialNav").on("click",function(){
+        removeAddTags(["商业"]);
+    });
+    $("#businessNav").on("click",function(){
+        removeAddTags([""]);
+    });
 
     //没有文章时，点击刷新按钮搜索
     $("#clickRefresh").on("click",function(){
-        removeAddTags(["java","JavaScript","DOM","中级","百度","商业","清空所有标签"]);
+        removeAddTags(["java","JavaScript","中级","商业","tools","清空所有标签"]);
     });
 
 });
