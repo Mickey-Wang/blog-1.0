@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# 2016-10-04:v4
+# 2016-10-04:v6
 img/backgrounds/coding-curriculum.jpg
 img/backgrounds/coffee.jpg
 img/backgrounds/mac.jpg
@@ -22,6 +22,13 @@ http://fonts.googleapis.com/css?family=Baloo+Bhai
 
 https://cdn.bootcss.com/jquery/1.11.3/jquery.min.js
 https://cdn.bootcss.com/jquery-smooth-scroll/1.7.2/jquery.smooth-scroll.min.js
+
+js/flat-ui.min.js
+js/jquery.backstretch.min.js
+js/jquery.plugin.min.js
+js/jquery.countdown.min.js
+js/main.js
+
 
 # Use from network if available
 NETWORK:
