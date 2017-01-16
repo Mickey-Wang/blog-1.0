@@ -200,13 +200,13 @@ $(document).ready(function(){
         removeAddTags(["tools","tips"]);
     });
     $("#techNav").on("click",function(){
-        removeAddTags([""]);
+        removeAddTags(["暂无"]);
     });
     $("#commercialNav").on("click",function(){
         removeAddTags(["商业"]);
     });
     $("#businessNav").on("click",function(){
-        removeAddTags([""]);
+        removeAddTags(["暂无"]);
     });
 
     //没有文章时，点击刷新按钮搜索
