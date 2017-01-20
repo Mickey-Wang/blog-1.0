@@ -188,10 +188,10 @@ $(document).ready(function(){
 
     //为导航栏中的每一个标签注册点击搜索事件
     $("#htmlNav").on("click",function(){
-        removeAddTags(["html","css"]);
+        removeAddTags(["暂无"]);
     });
     $("#javaNav").on("click",function(){
-        removeAddTags(["java"]);
+        removeAddTags(["Java"]);
     });
     $("#jsNav").on("click",function(){
         removeAddTags(["JavaScript"]);
@@ -211,7 +211,7 @@ $(document).ready(function(){
 
     //没有文章时，点击刷新按钮搜索
     $("#clickRefresh").on("click",function(){
-        removeAddTags(["java","JavaScript","中级","商业","tools","清空所有标签"]);
+        removeAddTags(["Java","JavaScript","中级","商业","tools","清空所有标签"]);
     });
 
 });

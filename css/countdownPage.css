@@ -263,7 +263,7 @@ a:hover { text-decoration: none; }
     .timer .minutes-wrapper,
     .timer .seconds-wrapper {
         width: 140px;
-        height: 120px;
+        height: 140px;
         margin: 0 7px;
         padding-top: 20px;
         -moz-border-radius: 70px;

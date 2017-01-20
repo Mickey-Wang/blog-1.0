@@ -279,3 +279,10 @@ button.goTop.hidden-xs{
     text-align: center;
     z-index: 0;
 }
+
+@font-face {
+    font-family: 'Baloo Bhai';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Baloo Bhai'), local('BalooBhai-Regular'), url(../fonts/D9UwT_bpBzKK7vWnCxsnw73hpw3pgy2gAi-Ip7WPMi0.woff) format('woff');
+}
