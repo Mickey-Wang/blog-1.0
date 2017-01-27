@@ -208,10 +208,13 @@ $(document).ready(function(){
     $("#businessNav").on("click",function(){
         removeAddTags(["暂无"]);
     });
+    $("#othersNav").on("click",function(){
+        removeAddTags(["开篇"]);
+    });
 
     //没有文章时，点击刷新按钮搜索
     $("#clickRefresh").on("click",function(){
-        removeAddTags(["Java","JavaScript","中级","商业","tools","清空所有标签"]);
+        removeAddTags(["开篇","Java","JavaScript","中级","商业","tools","清空所有标签"]);
     });
 
 });
