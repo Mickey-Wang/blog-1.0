@@ -206,7 +206,7 @@ $(document).ready(function(){
         removeAddTags(["商业"]);
     });
     $("#businessNav").on("click",function(){
-        removeAddTags(["暂无"]);
+        removeAddTags(["产业"]);
     });
     $("#othersNav").on("click",function(){
         removeAddTags(["开篇"]);
