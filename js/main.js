@@ -194,7 +194,7 @@ $(document).ready(function(){
         removeAddTags(["Java"]);
     });
     $("#jsNav").on("click",function(){
-        removeAddTags(["JavaScript"]);
+        removeAddTags(["JavaScript", "node"]);
     });
     $("#toolsNav").on("click",function(){
         removeAddTags(["tools","Tips"]);
@@ -214,7 +214,7 @@ $(document).ready(function(){
 
     //没有文章时，点击刷新按钮搜索
     $("#clickRefresh").on("click",function(){
-        removeAddTags(["开篇","Java","JavaScript","Tips","中级","商业","tools","清空所有标签"]);
+        removeAddTags(["开篇","Java","JavaScript","node","Tips","中级","商业","tools","清空所有标签"]);
     });
 
 });

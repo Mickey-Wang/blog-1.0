@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html class="theme theme-white">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Express + MongoDB搭建多人博客</title>
+<link href="https://www.zybuluo.com/static/assets/template-theme-white.css" rel="stylesheet" media="screen">
+<style type="text/css">
+
+#wmd-preview h1  {
+    color: #0077bb; /* 将标题改为蓝色 */
+}</style>
+</head>
+<body class="theme theme-white">
+<div id="wmd-preview" class="wmd-preview wmd-preview-full-reader"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="n3t8" id="express-mongodb搭建多人博客">Express + MongoDB搭建多人博客</h1><p data-anchor-id="guxl"><code>node</code> <code>JavaScript</code></p><p data-anchor-id="q01v"><a href="http://mickeywang.com" target="_blank"><i class="icon-home"></i> Laughing's blog </a> <br>
+<a href="https://www.zhihu.com/people/laughingHome" target="_blank"><i class="icon-user"></i>  Laughing's zhihu</a></p><hr><p data-anchor-id="ef3m">本文目录：</p><p data-anchor-id="h2d7"><div class="toc"><div class="toc">
+<ul>
+<li><a href="#express-mongodb搭建多人博客">Express + MongoDB搭建多人博客</a><ul>
+<li><a href="#node启动指令">node启动指令</a></li>
+<li><a href="#packagejson中的包版本表示">package.json中的包版本表示</a></li>
+<li><a href="#本项目开发过程中遇到的问题及注意点">本项目开发过程中遇到的问题及注意点</a></li>
+<li><a href="#基础功能">基础功能</a></li>
+<li><a href="#附加功能">附加功能</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</p><hr><blockquote data-anchor-id="tg3w" class="white-blockquote">
+  <p>本篇文章其实是Express + MongoDB搭建多人博客这个node初学项目的README.md，因为涉及一些项目开发过程中的问题和知识点的总结，对于初学node的同学应该有参考价值，所以在这里单独拿出分享一下。项目链接如下<a href="https://github.com/Mickey-Wang/blog" target="_blank"><i class="icon-github-alt"></i>blog</a>。再分享一个与此项目相关的学习链接<a href="https://maninboat.gitbooks.io/n-blog/content" target="_blank"><i class="icon-hand-right"></i>N-blog</a>。</p>
+</blockquote><div class="md-section-divider"></div><h2 data-anchor-id="1qg0" id="node启动指令">node启动指令</h2><ul data-anchor-id="z3t9">
+<li>利用node-inspector调试：node-debug -p 8081 app</li>
+<li>跨平台的设置环境变量并启动：cross-env NODE_ENV=test node app</li>
+<li>热更新启动：supervisor --harmony index</li>
+</ul><div class="md-section-divider"></div><h2 data-anchor-id="qcui" id="packagejson中的包版本表示">package.json中的包版本表示</h2><p data-anchor-id="3kp5">首先解释下版本号的命名，比如1.15.2。 <br>
+  <code>1.15.2</code>对应就是<code>marjor version.minor version.patch version</code>。</p><ul data-anchor-id="fo4j">
+<li>major version：这个版本号变化了表示有了一个不可以和上个版本兼容的大更改。</li>
+<li>minor version：这个版本号变化了表示有了增加了新的功能，并且可以向后兼容。</li>
+<li>patch version：这个版本号变化了表示修复了bug，并且可以向后兼容。</li>
+</ul><p data-anchor-id="adgj">然后解释例如~1.15.2和^3.3.4表示的意义。</p><ul data-anchor-id="s8y6">
+<li>波浪符号（~）: <br>
+他会<strong>更新到当前minor version（也就是中间的那位数字）中最新的版本</strong>。放到我们的例子中就是：body-parser:~1.15.2，这个库会去匹配更新到1.15.x的最新版本，如果出了一个新的版本为1.16.0，则不会自动升级。波浪符号是曾经npm安装时候的默认符号，现在已经变为了插入符号。</li>
+<li>插入符号（^）: <br>
+这个符号就显得非常的灵活了，他将会<strong>把当前库的版本更新到当前major version（也就是第一位数字）中最新的版本</strong>。放到我们的例子中就是：bluebird:^3.3.4，这个库会去匹配3.x.x中最新的版本，但是他不会自动更新到4.0.0。</li>
+</ul><p data-anchor-id="0qww">因为major version变化表示可能会影响之前版本的兼容性，所以无论是波浪符号还是插入符号都不会自动去修改major version，因为这可能导致程序crush，可能需要手动修改代码。</p><div class="md-section-divider"></div><h2 data-anchor-id="n68b" id="本项目开发过程中遇到的问题及注意点">本项目开发过程中遇到的问题及注意点</h2><ul data-anchor-id="jf7g">
+<li>关闭数据库。在打开一个MongoDB连接后，后续操作发生异常或执行完数据操作一定记着关闭该连接。</li>
+<li>如果在渲染ejs时，遇到<code>esc is not a function</code>报错信息，那么先排查一下在<code>res.render()</code>中传入ejs的参数是否正确。</li>
+<li>在数据操作中，<code>$</code>符号开头的参数均为mongoDB操作符，如<code>$inc</code>，应去mongoDB文档查询</li>
+</ul><div class="md-section-divider"></div><h2 data-anchor-id="1jh0" id="基础功能">基础功能</h2><ol data-anchor-id="t3m2">
+<li>多人注册、登录；</li>
+<li>发表文章（支持markdown）；</li>
+<li>上传文件；</li>
+<li>文章的编辑与删除；</li>
+<li>存档；</li>
+<li>标签；</li>
+<li>分页；</li>
+<li>留言（支持markdown）；</li>
+<li>用户个人主页；</li>
+<li>文章pv统计及留言统计；</li>
+<li>增加用户头像；</li>
+<li>标题关键字查询（支持有限的正则查询）；</li>
+<li>友情链接；</li>
+<li>404页面；</li>
+<li>转载功能；</li>
+<li>日志功能；</li>
+</ol><div class="md-section-divider"></div><h2 data-anchor-id="ykjx" id="附加功能">附加功能</h2><ol data-anchor-id="9cie">
+<li>使用passport引入OAuth登录机制，github授权登录；</li>
+<li>使用mongoose；</li>
+<li>使用Async异步编程类库；</li>
+<li>使用kindEditor<a href="http://kindeditor.net/demo.php" target="_blank">富文本编辑器</a>；</li>
+<li>使用Handlebars<a href="http://handlebarsjs.com/" target="_blank">模板引擎</a>；</li>
+<li>使用Disqus第三方社会化评论系统；（介于国内网络原因，暂做了解）</li>
+</ol></div>
+</body>
+</html>
